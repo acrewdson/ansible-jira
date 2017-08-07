@@ -37,3 +37,4 @@
     dest: '{{ jira_application_home }}/jira/dbconfig.xml'
     owner: '{{ jira_user }}'
     group: '{{ jira_group }}'
+    mode: 0640

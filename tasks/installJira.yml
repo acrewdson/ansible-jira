@@ -41,9 +41,19 @@
   shell: ls -d {{ jira_install_location }}/atlassian-jira*
   register: full_path
 
+- name: Set version-less jira install dir
+  set_fact:
+    jira_install_dir_without_version: "{{ jira_install_location }}/jira"
+
+- name: Determine if jira dir already exists
+  stat:
+    path: "{{ jira_install_dir_without_version }}"
+  register: does_jira_install_dir_without_version_exist
+
 - name: Make the installed path version neutral
-  command: mv {{ item }} {{ jira_install_location }}/jira
+  command: mv {{ item }} {{ jira_install_dir_without_version }}
   with_items: "{{ full_path.stdout_lines }}"
+  when: does_jira_install_dir_without_version_exist.stat.islnk is not defined
 
 - name: Set ownership permissions
   file:

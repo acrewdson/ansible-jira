@@ -19,6 +19,20 @@
     owner: '{{ jira_user }}'
     group: '{{ jira_group }}'
 
+- name: Set version-less jira install dir
+  set_fact:
+    jira_install_dir_without_version: "{{ jira_install_location }}/jira"
+
+- name: Stat the Jira install dir
+  stat:
+    path: "{{ jira_install_dir_without_version }}"
+  register: does_jira_install_dir_without_version_exist
+
+- name: Check to see whether we can install Jira -- does it already exist?
+  fail:
+    msg: "It looks like Jira has already been installed."
+  when: does_jira_install_dir_without_version_exist.stat.islnk is defined
+
 - name: Set download location for jira 7
   set_fact:
      jira_archive: "atlassian-jira-software-{{ jira_version }}.tar.gz"
@@ -42,7 +56,7 @@
   register: full_path
 
 - name: Make the installed path version neutral
-  command: mv {{ item }} {{ jira_install_location }}/jira
+  command: mv {{ item }} {{ jira_install_dir_without_version }}
   with_items: "{{ full_path.stdout_lines }}"
 
 - name: Set ownership permissions

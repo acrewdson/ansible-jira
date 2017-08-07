@@ -8,4 +8,4 @@
     mode: 0755
 
 - name: Register Service
-  service: name=jira enabled=yes state=started
+  service: name=jira enabled=yes state=started pattern=jira/bin/bootstrap.jar

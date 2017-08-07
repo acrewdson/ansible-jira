@@ -3,11 +3,11 @@
 - include: installJira.yml
 
 #Configure MYSQL backend
-- include: configMysql.yml
+- include: config_mysql.yml
   when: system_config_database and db_type == "mysql"
 
-#Configure Postgres backend 
-- include: configPostgres.yml
+#Configure Postgres backend
+- include: config_postgres.yml
   when: system_config_database and db_type == "postgres"
 
 #Register and launch service
